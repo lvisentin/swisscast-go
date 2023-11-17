@@ -1,7 +1,10 @@
 package main
 
 import (
-	"swisscast-go/controllers"
+	"fmt"
+	"swisscast-go/controllers/FeedController"
+	"swisscast-go/controllers/UserController"
+	"swisscast-go/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,11 +26,10 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 
-
 func main() {
 	router := gin.Default()
 	router.Use(CORSMiddleware())
-
-	router.POST("/feed", controllers.GetRssFeed)
-	router.Run("localhost:8080")
+    router.POST("/login", UserController.Login)
+	router.POST("/feed", FeedController.GetRssFeed)
+	router.Run(fmt.Sprintf("%s:%s", utils.GoDotEnvVariable("GO_URL"), utils.GoDotEnvVariable("GO_PORT")))
 }

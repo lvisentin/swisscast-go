@@ -1,4 +1,4 @@
-package controllers
+package FeedController
 
 import (
 	"net/http"
