@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  swiss-db:
+    container_name: swiss-container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+       - swiss-db:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - swiss-db
+    restart: unless-stopped
+
+networks:
+  swiss-db:
+    driver: bridge
+
+volumes:
+    swiss-db:
