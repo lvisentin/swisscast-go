@@ -1,7 +1,7 @@
 package config
 
 import (
-	"swisscast-go/utils"
+	"swisscast-go/utils/AppUtils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,11 +31,11 @@ func init() {
 
 func GetDB() DBConfig {
 	dbConfig := DBConfig{
-		Host:    utils.GoDotEnvVariable("DB_HOST"),
-		Port:     utils.GoDotEnvVariable("DB_PORT"),
-		User:     utils.GoDotEnvVariable("DB_USER"),
-		Pass:     utils.GoDotEnvVariable("DB_PASS"),
-		Database: utils.GoDotEnvVariable("DB_DATABASE"),
+		Host:    AppUtils.GoDotEnvVariable("DB_HOST"),
+		Port:     AppUtils.GoDotEnvVariable("DB_PORT"),
+		User:     AppUtils.GoDotEnvVariable("DB_USER"),
+		Pass:     AppUtils.GoDotEnvVariable("DB_PASS"),
+		Database: AppUtils.GoDotEnvVariable("DB_DATABASE"),
 	}
 
 	return dbConfig

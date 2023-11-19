@@ -13,10 +13,7 @@ type RSSFeedRequestParams struct {
 	Url   string `json:"url"`
 }
 
-func GetRssFeed(c *gin.Context) {
-	var rssFeedParams RSSFeedRequestParams
-	c.BindJSON(&rssFeedParams)
-
+func GetRssFeed(c *gin.Context , rssFeedParams RSSFeedRequestParams) {
 	fp := gofeed.NewParser()
 	fp.AuthConfig = &gofeed.Auth{
 		Username: rssFeedParams.Username,
