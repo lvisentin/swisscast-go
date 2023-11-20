@@ -19,3 +19,11 @@ func Register(c* gin.Context) {
 func SubscribeToFeed(c* gin.Context) {
 	UserService.SubscribeToFeed(c)
 }
+
+func GetUserInfo(c* gin.Context) {
+	AuthService.GetUserInfo(c)
+}
+
+func GetUserPodcasts(c *gin.Context) {
+	UserService.GetUserPodcasts(c);
+}

@@ -19,16 +19,28 @@ func GenerateToken(username string) (string, error) {
 	}
 	defer conn.Close()
 
-	var userId string
-	userErr := conn.QueryRow("SELECT id FROM users WHERE username = $1", username).Scan(&userId)
+	var user models.User
+	userErr := conn.QueryRow("SELECT id, username, name, phone, dateofbirth, email, password FROM users WHERE username = $1", username).Scan(
+		&user.ID,
+		&user.Username,
+		&user.Name,
+		&user.Phone,
+		&user.DateOfBirth,
+		&user.Email,
+		&user.Password,
+	)
+	
 	if userErr != nil {
+		fmt.Printf("user not found", userErr)
 		return "", userErr
 	}
+
+	fmt.Printf(user.Username, user.ID, user.Email)
 
 	expirationTime := time.Now().Add(24 * time.Hour)
 
 	claims := &models.Claims{
-		Id: userId,
+		User: user,
 		Username: username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
@@ -48,6 +60,8 @@ func DecryptToken(tokenString string) (*models.Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &models.Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})
+
+	fmt.Printf(token.Raw)
 
 	if err != nil {
 		return nil, err

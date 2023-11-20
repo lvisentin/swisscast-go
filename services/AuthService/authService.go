@@ -3,6 +3,7 @@ package AuthService
 import (
 	"log"
 	"net/http"
+	"strings"
 	"swisscast-go/db"
 	"swisscast-go/models"
 	"swisscast-go/utils/AppUtils"
@@ -83,4 +84,16 @@ func validateUserCredentials(username, password string) bool {
 	}
 
 	return true
+}
+
+func GetUserInfo(c *gin.Context) {
+	reqToken := strings.Split(c.Request.Header.Get("Authorization"), " ")[1]
+	
+	claims, err := JwtUtils.DecryptToken(reqToken)
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{"message":"Seu token expirou, faça login novamente"});
+	}
+
+
+	c.IndentedJSON(http.StatusOK, claims.User)
 }

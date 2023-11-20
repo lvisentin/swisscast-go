@@ -19,6 +19,7 @@ type RegisterUser struct {
 type Claims struct {
 	Id string `json:"id"`
 	Username string `json:"username"`
+	User User `json:"user"` 
 	jwt.StandardClaims
 }
 

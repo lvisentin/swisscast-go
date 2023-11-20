@@ -12,3 +12,9 @@ type User struct {
     Password string `json:"password"`
 }
 
+type UserPodcast struct {
+	UserId string `json:"userId"`
+	URL string `json:"url"`
+	Username string `json:"username"`
+	Pass string `json:"pass"`
+}
