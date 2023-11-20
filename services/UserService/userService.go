@@ -9,6 +9,7 @@ import (
 
 	"swisscast-go/controllers/FeedController"
 	"swisscast-go/db"
+	"swisscast-go/models"
 	"swisscast-go/utils/AppUtils"
 	"swisscast-go/utils/JwtUtils"
 
@@ -70,11 +71,11 @@ func SubscribeToFeed(c *gin.Context) bool{
 			return false
 		}
 
-		c.JSON(http.StatusOK, gin.H{"feed":feed})
+		c.IndentedJSON(http.StatusOK, gin.H{"feed": feed})
 		return true
     }
 
-	c.JSON(http.StatusOK, gin.H{"feed":feed})
+	c.IndentedJSON(http.StatusOK, gin.H{"feed": feed})
 	return true
 }
 
@@ -92,15 +93,25 @@ func GetUserPodcasts(c *gin.Context){
 		return
 	}
 
-	podcasts, err := conn.Query("SELECT user_id, url, username, pass from user_podcasts WHERE user_id = $1", claims.User.ID)
-	if err != nil {
-		if err != sql.ErrNoRows  {
-            log.Print(err)
-			c.IndentedJSON(http.StatusNotFound, gin.H{"message":"Ocorreu um erro"})
+	podcasts, queryErr := conn.Query("SELECT id, podcast_logo, podcast_name, url from user_podcasts WHERE user_id = $1", claims.User.ID)
+	if queryErr != nil {
+		if queryErr != sql.ErrNoRows  {
+			log.Print(queryErr)
+			c.IndentedJSON(http.StatusInternalServerError, gin.H{"message":"Ocorreu um erro"})
 			return
         }
 	}
 	
-	c.IndentedJSON(http.StatusOK, podcasts)
-	return
+	var user_podcasts []models.UserPodcast
+	for podcasts.Next() {
+       var user_podcast models.UserPodcast
+	   err = podcasts.Scan(&user_podcast.ID, &user_podcast.PodcastLogo, &user_podcast.PodcastName, &user_podcast.URL)
+	   if err != nil {
+		continue
+	   }
+
+	   user_podcasts = append(user_podcasts, user_podcast)
+	}
+	
+    c.IndentedJSON(http.StatusOK, gin.H{"podcasts": user_podcasts}) 
 }

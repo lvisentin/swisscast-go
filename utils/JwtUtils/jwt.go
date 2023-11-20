@@ -61,8 +61,6 @@ func DecryptToken(tokenString string) (*models.Claims, error) {
 		return []byte(secretKey), nil
 	})
 
-	fmt.Printf(token.Raw)
-
 	if err != nil {
 		return nil, err
 	}
